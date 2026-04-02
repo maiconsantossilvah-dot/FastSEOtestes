@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fast SEO — Pipeline de Fichas Técnicas</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ─── TOKENS ─── */
+:root {
+  --color-bg-page:      #F9FAFB;
+  --color-bg-subtle:    #F3F4F6;
+  --color-bg-muted:     #E5E7EB;
+  --color-surface:      #FFFFFF;
+  --color-border:       #E5E7EB;
+  --color-border-strong:#D1D5DB;
+  --color-text-primary: #111827;
+  --color-text-secondary:#6B7280;
+  --color-text-muted:   #9CA3AF;
+  --color-accent:       #3B82F6;
+  --color-accent-hover: #2563EB;
+  --color-accent-bg:    #EFF6FF;
+  --color-accent-glow:  rgba(59,130,246,.15);
+  --color-success:      #059669;
+  --color-success-bg:   #ECFDF5;
+  --color-success-border:rgba(5,150,105,.2);
+  --color-warn:         #D97706;
+  --color-warn-bg:      #FFFBEB;
+  --color-danger:       #DC2626;
+  --color-danger-bg:    #FEF2F2;
+  --color-header-bg:    #FFFFFF;
+  --color-sidebar-bg:   #111827;
+  --color-log-bg:       #111827;
+  --sidebar-w:          260px;
+  --shadow-xs:  0 1px 2px rgba(0,0,0,.05);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow:     0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg:  0 20px 25px rgba(0,0,0,.1),0 10px 10px rgba(0,0,0,.04);
+  --tr:         all .15s ease;
+  --font-mono:  'JetBrains Mono', monospace;
+  --font-body:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius:     8px;
+  --radius-lg:  12px;
+}
+[data-theme="dark"] {
+  --color-bg-page:      #0F172A;
+  --color-bg-subtle:    #1E293B;
+  --color-bg-muted:     #334155;
+  --color-surface:      #1E293B;
+  --color-border:       #334155;
+  --color-border-strong:#475569;
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary:#94A3B8;
+  --color-text-muted:   #64748B;
+  --color-accent:       #3B82F6;
+  --color-accent-hover: #60A5FA;
+  --color-accent-bg:    #1E3A5F;
+  --color-accent-glow:  rgba(59,130,246,.2);
+  --color-success:      #10B981;
+  --color-success-bg:   #064E3B;
+  --color-success-border:rgba(16,185,129,.25);
+  --color-warn:         #F59E0B;
+  --color-warn-bg:      #451A03;
+  --color-danger:       #EF4444;
+  --color-danger-bg:    #450A0A;
+  --color-header-bg:    #0F172A;
+  --color-sidebar-bg:   #0F172A;
+  --color-log-bg:       #020617;
+  --shadow-xs:  0 1px 2px rgba(0,0,0,.3);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  --shadow:     0 4px 6px rgba(0,0,0,.4),0 2px 4px rgba(0,0,0,.3);
+  --shadow-lg:  0 20px 25px rgba(0,0,0,.5),0 10px 10px rgba(0,0,0,.4);
+}
+
+/* ─── RESET ─── */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body); font-size: 14px; line-height: 1.6;
+  color: var(--color-text-primary); background: var(--color-bg-page); min-height: 100vh;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  transition: background .2s, color .2s;
+}
+
+/* ─── BUTTON BASE ─── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 5px; cursor: pointer; font-family: var(--font-body); font-weight: 500;
+  border-radius: var(--radius); transition: var(--tr); border: 1px solid transparent;
+  white-space: nowrap;
+}
+.btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+
+.btn-icon {
+  width: 30px; height: 30px; background: transparent;
+  border-color: var(--color-border); color: var(--color-text-secondary); font-size: 13px;
+}
+.btn-icon:hover:not(:disabled) { background: var(--color-bg-subtle); color: var(--color-text-primary); }
+.btn-icon--lg { width: 32px; height: 32px; }
+
+.btn-ghost {
+  height: 30px; padding: 0 11px; background: transparent;
+  border-color: var(--color-border); color: var(--color-text-secondary); font-size: 12px;
+}
+.btn-ghost:hover:not(:disabled) { background: var(--color-bg-subtle); color: var(--color-text-primary); border-color: var(--color-border-strong); }
+
+.btn-primary {
+  padding: 9px 20px; background: var(--color-accent); color: #fff;
+  border: none; font-size: 13px; font-weight: 600;
+}
+.btn-primary:hover:not(:disabled) { background: var(--color-accent-hover); }
+
+.btn-secondary {
+  padding: 9px 16px; background: var(--color-bg-subtle); color: var(--color-text-secondary);
+  border-color: var(--color-border); font-size: 13px;
+}
+.btn-secondary:hover:not(:disabled) { background: var(--color-bg-muted); color: var(--color-text-primary); }
+
+.btn-danger {
+  padding: 9px 14px; background: transparent;
+  border-color: var(--color-border-strong); color: var(--color-danger); font-size: 13px;
+}
+.btn-danger:hover:not(:disabled) { background: var(--color-danger-bg); border-color: var(--color-danger); }
+
+/* ─── HEADER ─── */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 60px;
+  background: var(--color-header-bg); border-bottom: 1px solid var(--color-border);
+  display: flex; align-items: center; padding: 0 20px 0 0;
+  transition: background .2s, border-color .2s;
+}
+.header-logo-area {
+  width: var(--sidebar-w); height: 100%; flex-shrink: 0;
+  display: flex; align-items: center; padding: 0 16px;
+  border-right: 1px solid var(--color-border);
+  transition: width .25s ease, border-color .2s;
+}
+.sidebar-collapsed .header-logo-area { width: 0; padding: 0; border-right: none; overflow: hidden; }
+.logo { display: flex; align-items: center; gap: 10px; overflow: hidden; white-space: nowrap; }
+.logo-icon {
+  width: 30px; height: 30px; border-radius: var(--radius); flex-shrink: 0;
+  background: var(--color-accent); display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 13px;
+}
+.logo-text { font-size: 14px; font-weight: 700; color: var(--color-text-primary); }
+.logo-text span { color: var(--color-accent); }
+.logo-sub { font-size: 10px; color: var(--color-text-muted); font-family: var(--font-mono); display: block; }
+.header-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+/* Quota bar */
+.quota-bar {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted);
+  padding-right: 12px; border-right: 1px solid var(--color-border); margin-right: 4px;
+}
+.quota-track { width: 60px; height: 3px; background: var(--color-bg-muted); border-radius: 99px; overflow: hidden; }
+.quota-fill { height: 100%; border-radius: 99px; background: var(--color-success); transition: width .4s ease, background .3s; }
+.free-pill {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  color: var(--color-success); background: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  padding: 3px 8px; border-radius: 99px;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: var(--color-sidebar-bg); border-right: 1px solid rgba(255,255,255,.05);
+  position: fixed; top: 60px; left: 0; bottom: 0;
+  display: flex; flex-direction: column; overflow: hidden;
+  transition: width .25s ease; z-index: 150;
+}
+.sidebar-collapsed .sidebar { width: 0; border-right: none; }
+.sidebar-collapsed .sidebar .sb-section-label,
+.sidebar-collapsed .sidebar .sb-cat-list,
+.sidebar-collapsed .sidebar .sb-empty,
+.sidebar-collapsed .sidebar .sb-add-btn span,
+.sidebar-collapsed .sidebar .sb-footer { display: none; }
+.sidebar-collapsed .sidebar .sb-header { padding: 14px 0; justify-content: center; border-bottom-color: transparent; }
+.sidebar-collapsed .sidebar .sb-add-btn { width: 36px; height: 36px; padding: 0; border-radius: 50%; margin: 12px auto; justify-content: center; font-size: 18px; }
+
+.sb-header {
+  padding: 14px 14px 12px; border-bottom: 1px solid rgba(255,255,255,.07);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.sb-title { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.3); flex: 1; white-space: nowrap; overflow: hidden; }
+.sb-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 6px 0; display: flex; flex-direction: column; }
+.sb-content::-webkit-scrollbar { width: 4px; }
+.sb-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 2px; }
+.sb-section-label { font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.2); padding: 8px 14px 4px; }
+.sb-cat-list { display: flex; flex-direction: column; gap: 1px; padding: 0 8px; }
+.sb-cat-item {
+  display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 6px;
+  border: none; background: none; width: 100%; text-align: left;
+  color: rgba(255,255,255,.45); font-size: 13px; font-family: var(--font-body);
+  cursor: pointer; transition: background .12s, color .12s;
+  white-space: nowrap; overflow: hidden;
+}
+.sb-cat-item:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.8); }
+.sb-cat-item.active { background: rgba(59,130,246,.18); color: #93C5FD; }
+.sb-cat-item.active .sb-cat-dot { background: var(--color-accent); }
+.sb-cat-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.2); flex-shrink: 0; }
+.sb-cat-name { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.sb-cat-check { font-size: 10px; color: #34D399; flex-shrink: 0; }
+.sb-empty { text-align: center; padding: 40px 16px; color: rgba(255,255,255,.2); font-size: 12px; line-height: 1.7; }
+.sb-empty strong { display: block; font-size: 24px; margin-bottom: 10px; }
+.sb-add-btn {
+  display: flex; align-items: center; gap: 8px; margin: 8px 8px 0; padding: 9px 12px; border-radius: 6px;
+  background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.2);
+  color: #93C5FD; font-size: 12px; font-weight: 500;
+  cursor: pointer; font-family: var(--font-body); transition: var(--tr); white-space: nowrap; overflow: hidden;
+}
+.sb-add-btn:hover { background: rgba(59,130,246,.18); border-color: rgba(59,130,246,.35); }
+.sb-footer {
+  padding: 10px 14px; flex-shrink: 0; border-top: 1px solid rgba(255,255,255,.06);
+  font-size: 10px; color: rgba(255,255,255,.18); font-family: var(--font-mono);
+}
+
+/* ─── LAYOUT / MAIN ─── */
+.layout { display: flex; padding-top: 60px; min-height: 100vh; }
+.main { flex: 1; margin-left: var(--sidebar-w); min-width: 0; transition: margin-left .25s ease; }
+.sidebar-collapsed .main { margin-left: 0; }
+.page { max-width: 740px; margin: 0 auto; padding: 28px 24px 72px; display: flex; flex-direction: column; gap: 14px; }
+
+/* ─── CARD ─── */
+.card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow-xs); transition: background .2s, border-color .2s;
+}
+.card-hdr {
+  padding: 12px 20px; border-bottom: 1px solid var(--color-border); background: var(--color-bg-page);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title { font-size: 12px; font-weight: 600; color: var(--color-text-primary); }
+.card-body { padding: 20px; }
+
+/* ─── FORM FIELDS ─── */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); }
+.setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media(max-width:580px) { .setup-grid { grid-template-columns: 1fr; } }
+
+.key-wrap { position: relative; }
+.key-status { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; pointer-events: none; }
+
+input[type="password"], select, textarea {
+  width: 100%; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);
+  color: var(--color-text-primary); font-family: var(--font-mono); font-size: 12px; padding: 9px 12px; outline: none;
+  transition: border-color .15s, box-shadow .15s; -webkit-appearance: none; appearance: none;
+}
+input[type="password"]:focus, select:focus, textarea:focus {
+  border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-glow);
+}
+input.valid { border-color: var(--color-success); }
+input.invalid { border-color: var(--color-danger); }
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px;
+}
+.hint { font-size: 11px; color: var(--color-text-muted); line-height: 1.5; }
+.hint a { color: var(--color-accent); text-decoration: none; }
+.hint a:hover { text-decoration: underline; }
+
+/* Quota display items */
+
+/* ─── TIP / LEARN INDICATOR ─── */
+.tip {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--color-accent-bg); border: 1px solid rgba(59,130,246,.2);
+  border-radius: var(--radius); padding: 13px 16px; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6;
+}
+.tip-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.learn-indicator {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--color-success-bg); border: 1px solid var(--color-success-border);
+  border-radius: var(--radius); padding: 11px 16px; font-size: 13px; color: var(--color-text-secondary);
+  transition: background .2s, border-color .2s;
+}
+.learn-indicator.empty { background: var(--color-bg-page); border-color: var(--color-border); }
+.learn-indicator-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: var(--color-success); }
+.learn-indicator.empty .learn-indicator-dot { background: var(--color-text-muted); }
+
+/* ─── PIPELINE STEPS ─── */
+.steps { display: flex; gap: 8px; }
+.step {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-radius: var(--radius);
+  background: var(--color-bg-page); border: 1px solid var(--color-border);
+  font-size: 12px; color: var(--color-text-muted); transition: var(--tr);
+}
+.step-num { font-family: var(--font-mono); font-size: 10px; font-weight: 600; }
+.step-name { font-weight: 500; }
+.step.active { background: var(--color-accent-bg); border-color: rgba(59,130,246,.4); color: var(--color-accent); }
+.step.done   { background: var(--color-success-bg); border-color: var(--color-success-border); color: var(--color-success); }
+.step.error  { background: var(--color-danger-bg); border-color: rgba(220,38,38,.3); color: var(--color-danger); }
+.step.skip   { opacity: .4; }
+
+/* ─── RUN BUTTON ─── */
+.run-btn {
+  width: 100%; padding: 13px 20px; border: none; border-radius: var(--radius);
+  background: var(--color-accent); color: #fff; font-size: 14px; font-weight: 600;
+  font-family: var(--font-body); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background .15s, box-shadow .15s, transform .1s;
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+.run-btn:hover:not(:disabled) { background: var(--color-accent-hover); box-shadow: 0 4px 12px rgba(59,130,246,.35); }
+.run-btn:active:not(:disabled) { transform: scale(.99); }
+.run-btn:disabled { opacity: .55; cursor: not-allowed; }
+.run-btn.loading .run-icon { display: none; }
+.run-btn.loading .spinner { display: block; }
+.spinner {
+  width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin .6s linear infinite; display: none;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── LOG ─── */
+.log-box {
+  background: var(--color-log-bg); border-radius: var(--radius); border: 1px solid rgba(255,255,255,.05);
+  padding: 14px 16px; font-family: var(--font-mono); font-size: 11px;
+  max-height: 200px; overflow-y: auto; display: none; line-height: 1.7;
+}
+.log-box.vis { display: block; }
+.log-box::-webkit-scrollbar { width: 4px; }
+.log-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+.log-line { display: flex; gap: 12px; padding: 1px 0; }
+.log-ts  { color: rgba(255,255,255,.2); flex-shrink: 0; }
+.log-msg { color: rgba(255,255,255,.6); word-break: break-word; }
+.log-i .log-msg { color: rgba(255,255,255,.4); }
+.log-o .log-msg { color: #34D399; }
+.log-w .log-msg { color: #FBBF24; }
+.log-e .log-msg { color: #F87171; }
+
+/* ─── RESULTS ─── */
+.results { display: none; flex-direction: column; gap: 14px; }
+.results.vis { display: flex; }
+.result-hdr { padding: 11px 20px; border-bottom: 1px solid var(--color-border); background: var(--color-bg-page); display: flex; align-items: center; justify-content: space-between; }
+.result-label { font-size: 11px; font-weight: 600; color: var(--color-text-muted); letter-spacing: .5px; text-transform: uppercase; }
+.result-content { padding: 18px 20px; white-space: pre-wrap; font-family: var(--font-mono); font-size: 12px; line-height: 1.85; color: var(--color-text-primary); word-break: break-word; }
+
+/* ─── BADGE ─── */
+.badge { font-size: 10px; font-weight: 600; font-family: var(--font-mono); padding: 3px 8px; border-radius: 99px; }
+.badge-ok     { background: var(--color-success-bg); color: var(--color-success); border: 1px solid var(--color-success-border); }
+.badge-fail   { background: var(--color-danger-bg); color: var(--color-danger); border: 1px solid rgba(220,38,38,.2); }
+.badge-bivolt { background: var(--color-warn-bg); color: var(--color-warn); border: 1px solid rgba(217,119,6,.2); }
+[data-theme="dark"] .badge-bivolt { background: #1C1200; }
+
+/* ─── COPY BUTTON ─── */
+.copy-btn {
+  height: 27px; padding: 0 10px; border: 1px solid var(--color-border); border-radius: 6px;
+  background: transparent; color: var(--color-text-muted); font-family: var(--font-mono);
+  font-size: 10px; font-weight: 500; cursor: pointer; transition: var(--tr);
+}
+.copy-btn:hover { border-color: var(--color-border-strong); color: var(--color-text-primary); background: var(--color-bg-page); }
+
+/* ─── INPUT TEXTAREA ─── */
+textarea#inputText { min-height: 180px; resize: vertical; line-height: 1.7; font-size: 12px; }
+.char-count { font-size: 11px; color: var(--color-text-muted); font-family: var(--font-mono); }
+.char-count.warn { color: var(--color-warn); }
+
+/* ─── MODALS (shared) ─── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,.5);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  animation: fadeIn .15s ease;
+}
+.modal-overlay--prompt { z-index: 600; background: rgba(0,0,0,.55); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.modal {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg); animation: slideUp .18s ease; display: flex; flex-direction: column;
+}
+.modal--lg { max-width: 660px; }
+
+.modal-hdr {
+  padding: 18px 22px 14px; border-bottom: 1px solid var(--color-border);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; background: var(--color-surface); z-index: 1;
+}
+.modal-title { font-size: 15px; font-weight: 600; color: var(--color-text-primary); }
+.modal-close {
+  width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--color-border); background: transparent;
+  color: var(--color-text-muted); cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; transition: var(--tr);
+}
+.modal-close:hover { background: var(--color-bg-subtle); color: var(--color-text-primary); }
+
+.modal-body { padding: 18px 22px; display: flex; flex-direction: column; gap: 16px; }
+.modal-body .m-field { display: flex; flex-direction: column; gap: 6px; }
+.modal-body .m-field label { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); }
+.modal-body .m-field input[type="text"],
+.modal-body .m-field textarea {
+  width: 100%; background: var(--color-bg-page); border: 1px solid var(--color-border); border-radius: var(--radius);
+  color: var(--color-text-primary); font-family: var(--font-mono); font-size: 12px; padding: 9px 12px; outline: none;
+  transition: border-color .15s, box-shadow .15s; resize: vertical; line-height: 1.6;
+}
+.modal-body .m-field input[type="text"]:focus,
+.modal-body .m-field textarea:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-glow); }
+.modal-body .m-field input[type="text"] { font-family: var(--font-body); font-size: 13px; font-weight: 500; }
+.modal-body .m-field textarea { min-height: 88px; }
+.modal-body .m-field textarea.tall { min-height: 128px; }
+
+.modal-ftr {
+  padding: 14px 22px; border-top: 1px solid var(--color-border);
+  display: flex; gap: 8px; align-items: center;
+  position: sticky; bottom: 0; background: var(--color-surface); z-index: 1;
+}
+.modal-saved { font-size: 11px; color: var(--color-success); font-family: var(--font-mono); opacity: 0; transition: opacity .3s; margin-left: auto; }
+.modal-saved.show { opacity: 1; }
+
+/* ─── PROMPT MODAL ─── */
+.prompt-tab-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.prompt-tab {
+  padding: 5px 12px; border-radius: 99px; font-size: 11px; font-weight: 500;
+  font-family: var(--font-mono); border: 1px solid var(--color-border); background: transparent;
+  color: var(--color-text-secondary); cursor: pointer; transition: var(--tr);
+}
+.prompt-tab:hover { background: var(--color-bg-subtle); color: var(--color-text-primary); }
+.prompt-tab.active { background: var(--color-accent-bg); color: var(--color-accent); border-color: rgba(59,130,246,.4); }
+.prompt-textarea {
+  width: 100%; background: var(--color-bg-page); border: 1px solid var(--color-border); border-radius: var(--radius);
+  color: var(--color-text-primary); font-family: var(--font-mono); font-size: 11px;
+  padding: 12px 14px; outline: none; transition: border-color .15s, box-shadow .15s;
+  resize: vertical; line-height: 1.75; min-height: 300px;
+}
+.prompt-textarea:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-glow); }
+
+/* ─── ANALYTICS ─── */
+.analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
+.analytics-card { background: var(--color-bg-page); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 14px; text-align: center; }
+.analytics-val { font-size: 22px; font-weight: 700; color: var(--color-text-primary); font-family: var(--font-mono); line-height: 1.1; }
+.analytics-lbl { font-size: 10px; color: var(--color-text-muted); margin-top: 5px; text-transform: uppercase; letter-spacing: .5px; }
+
+/* ─── HISTORY ─── */
+.hist-item {
+  border: 1px solid var(--color-border); border-radius: var(--radius);
+  padding: 11px 14px; cursor: pointer; background: transparent;
+  transition: background .12s, border-color .12s;
+}
+.hist-item:hover { background: var(--color-bg-page); border-color: var(--color-border-strong); }
+.hist-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.hist-date { font-size: 10px; font-family: var(--font-mono); color: var(--color-text-muted); }
+.hist-bivolt-tag {
+  font-size: 9px; background: var(--color-accent-bg); color: var(--color-accent);
+  padding: 2px 7px; border-radius: 99px; font-family: var(--font-mono); font-weight: 600;
+}
+.hist-preview { font-size: 12px; color: var(--color-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ─── MISC ─── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 99px; }
+#inputAlertBox { margin-top: 0; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="appHeader">
+  <div class="header-logo-area">
+    <div class="logo">
+      <div class="logo-icon">F</div>
+      <div>
+        <div class="logo-text">Fast<span>SEO</span></div>
+        <span class="logo-sub">Pipeline de Fichas</span>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-icon btn-icon--lg" id="sidebarToggle" title="Abrir painel de categorias" aria-label="Abrir painel de categorias" style="flex-shrink:0;margin-left:14px;">🧠</button>
+  <div class="header-right">
+    <div class="quota-bar">
+      <span id="quotaLabel">0 / 1000 hoje</span>
+      <div class="quota-track"><div class="quota-fill" id="quotaFill" style="width:0%"></div></div>
+      <button id="resetCotaBtn" title="Zerar contador" class="btn" style="background:none;border:none;color:var(--color-text-muted);font-size:11px;padding:0 2px;">↺</button>
+    </div>
+    <div class="free-pill">✓ gratuito</div>
+    <button id="openPromptsBtn" class="btn btn-ghost">✏️ Prompts</button>
+    <button id="openAnalyticsBtn" class="btn btn-ghost">📊 Analytics</button>
+    <button class="btn btn-icon" id="themeBtn" title="Modo escuro" aria-label="Alternar tema">🌙</button>
+  </div>
+</header>
+
+<!-- APP LAYOUT -->
+<div class="layout" id="appLayout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-header">
+      <span>🧠</span>
+      <span class="sb-title">Categorias</span>
+    </div>
+    <div class="sb-content" id="sbContent"></div>
+    <div style="padding:8px 8px 0;">
+      <button class="sb-add-btn" id="addCatBtn">
+        <span style="font-size:15px;line-height:1;">＋</span>
+        <span>Nova Categoria</span>
+      </button>
+    </div>
+    <div class="sb-footer" id="sbFooter"></div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="mainContent">
+    <div class="page">
+
+      <!-- CONFIGURATION CARD -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Configuração de APIs</span>
+          <span class="hint">Google Gemini · Mistral</span>
+        </div>
+        <div class="card-body">
+          <div class="setup-grid">
+            <div class="field">
+              <label>API Key do Gemini <span style="color:var(--color-success);font-weight:400">· A2 e A3</span></label>
+              <div class="key-wrap">
+                <input type="password" id="apiKey" placeholder="AIza..."/>
+                <span class="key-status" id="keyStatus"></span>
+              </div>
+              <div class="hint">Obtenha grátis em <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>
+            </div>
+            <div class="field">
+              <label>API Key da Mistral <span style="color:var(--color-success);font-weight:400">· A1</span></label>
+              <div class="key-wrap">
+                <input type="password" id="mistralKey" placeholder="..."/>
+                <span class="key-status" id="mistralKeyStatus"></span>
+              </div>
+              <div class="hint">Grátis em <a href="https://console.mistral.ai/api-keys" target="_blank">console.mistral.ai</a> — sem cartão · usado no A1 (Formatador)</div>
+            </div>
+
+            <div class="field">
+              <label>Modelo Gemini</label>
+              <select id="modelSel">
+                <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite — 1.000 req/dia ⭐</option>
+                <option value="gemini-2.5-flash">Gemini 2.5 Flash — 250 req/dia</option>
+                <option value="gemini-2.5-pro">Gemini 2.5 Pro — 100 req/dia</option>
+              </select>
+              <div class="hint" id="modelHint"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEARN INDICATOR -->
+      <div class="learn-indicator empty" id="learnIndicator">
+        <div class="learn-indicator-dot"></div>
+        <span id="learnIndicatorText">Nenhum exemplo configurado — abra o painel lateral para adicionar referências</span>
+      </div>
+
+      <!-- PRODUCT INPUT CARD -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Dados do Produto</span>
+          <span class="char-count" id="charCount">0 caracteres</span>
+        </div>
+        <div class="card-body">
+          <textarea id="inputText" placeholder="Cole aqui os dados brutos do fornecedor...
+
+Ex:
+4203900 – EAN: 7893401194859
+Fornecedor: STECK INDUSTRIA ELETRICA
+DISJUNTOR STECK DIN 3P 63A CURVA C 3KA SDD63C63 BRANCO
+
+Marca: Steck
+Corrente nominal: 63A ..."></textarea>
+        </div>
+      </div>
+
+      <!-- PIPELINE STEPS -->
+      <div class="steps">
+        <div class="step" id="ps1"><div class="step-num">01</div><div class="step-name">Formatador</div></div>
+        <div class="step" id="ps2"><div class="step-num">02</div><div class="step-name">Conferente</div></div>
+        <div class="step" id="ps3"><div class="step-num">03</div><div class="step-name">Copywriter</div></div>
+      </div>
+
+      <!-- RUN BUTTON -->
+      <button class="run-btn" id="runBtn" aria-label="Processar ficha técnica">
+        <span class="run-icon">⚡ Processar Ficha</span>
+        <div class="spinner"></div>
+      </button>
+
+      <!-- LOG OUTPUT -->
+      <div class="log-box" id="logBox"></div>
+
+      <!-- RESULTS -->
+      <div class="results" id="results">
+        <div class="card">
+          <div class="result-hdr">
+            <span class="result-label">Ficha Técnica Formatada</span>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span id="bivoltBadge" class="badge badge-bivolt" style="display:none;">⚡ BIVOLT</span>
+              <button class="copy-btn" id="exportTxtBtn" style="background:var(--color-bg-subtle);color:var(--color-text-secondary);">⬇ .txt</button>
+              <button class="copy-btn" id="copyFichaBtn">Copiar</button>
+            </div>
+          </div>
+          <div class="result-content" id="fichaOut"></div>
+        </div>
+        <div class="card">
+          <div class="result-hdr">
+            <span class="result-label">Conferência de Qualidade</span>
+            <span id="statusBadge" class="badge"></span>
+          </div>
+          <div class="result-content" id="validacaoOut"></div>
+        </div>
+        <div class="card" id="copyBlock" style="display:none">
+          <div class="result-hdr">
+            <span class="result-label">Conteúdo Comercial</span>
+            <button class="copy-btn" id="copyConteudoBtn">Copiar</button>
+          </div>
+          <div class="result-content" id="conteudoOut"></div>
+        </div>
+      </div>
+
+      <!-- HISTORY PANEL -->
+      <div id="historicoPanel" class="card">
+        <div class="card-hdr">
+          <span class="card-title">📂 Histórico de Resultados</span>
+          <button id="clearHistoricoBtn" class="btn" style="font-size:11px;color:var(--color-text-muted);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;transition:color .15s;">Limpar tudo</button>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;gap:8px;">
+            <input id="historicoBusca" type="text" placeholder="Buscar no histórico..."
+              style="flex:1;background:var(--color-bg-page);border:1px solid var(--color-border);border-radius:var(--radius);
+                     color:var(--color-text-primary);font-family:var(--font-body);font-size:12px;padding:8px 12px;outline:none;
+                     transition:border-color .15s,box-shadow .15s;"/>
+            <select id="historicoFiltro"
+              style="background:var(--color-bg-page);border:1px solid var(--color-border);border-radius:var(--radius);
+                     color:var(--color-text-secondary);font-family:var(--font-body);font-size:12px;padding:8px 10px;
+                     outline:none;cursor:pointer;background-image:none;">
+              <option value="todos">Todos</option>
+              <option value="padrao">Padrão</option>
+              <option value="bivolt">Bivolt</option>
+            </select>
+          </div>
+          <div id="historicoLista" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div><!-- /layout -->
+
+<script>
+'use strict';
+
+/* ════════════════════════════════════════════════
+   STORAGE — camada única de acesso ao localStorage
+   ════════════════════════════════════════════════ */
+const Storage = {
+  get(key, fallback = null) {
+    try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+    catch { return fallback; }
+  },
+  set(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch (e) {
+      if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+        alert('Armazenamento local cheio. Reduza o tamanho dos exemplos nas categorias.');
+      }
+      return false;
+    }
+  },
+  remove(key) { localStorage.removeItem(key); },
+};
+
+/* ════════════════════════════════════════════════
+   ESTADO GLOBAL CENTRALIZADO
+   ════════════════════════════════════════════════ */
+const AppState = {
+  sidebar: { open: true },
+  pipeline: { running: false, result: {}, abort: null },
+  categories: { active: null, editorOpen: false, saveTimer: null },
+  prompts: { activeTab: 'P1', saveTimer: null },
+};
+
+/* ════════════════════════════════════════════════
+   DOM HELPERS — referências centralizadas
+   ════════════════════════════════════════════════ */
+const $ = (id) => document.getElementById(id);
+const UI = {
+  // Header
+  appHeader:    () => $('appHeader'),
+  appLayout:    () => $('appLayout'),
+  sidebarToggle:() => $('sidebarToggle'),
+  themeBtn:     () => $('themeBtn'),
+  quotaLabel:   () => $('quotaLabel'),
+  quotaFill:    () => $('quotaFill'),
+  // Config
+  apiKey:          () => $('apiKey'),
+  mistralKey:      () => $('mistralKey'),
+  modelSel:        () => $('modelSel'),
+  keyStatus:       () => $('keyStatus'),
+  mistralStatus:   () => $('mistralKeyStatus'),
+  modelHint:       () => $('modelHint'),
+  // Input
+  inputText:    () => $('inputText'),
+  charCount:    () => $('charCount'),
+  // Pipeline
+  runBtn:       () => $('runBtn'),
+  logBox:       () => $('logBox'),
+  // Results
+  results:      () => $('results'),
+  fichaOut:     () => $('fichaOut'),
+  validacaoOut: () => $('validacaoOut'),
+  conteudoOut:  () => $('conteudoOut'),
+  copyBlock:    () => $('copyBlock'),
+  bivoltBadge:  () => $('bivoltBadge'),
+  statusBadge:  () => $('statusBadge'),
+  // Sidebar
+  sbContent:    () => $('sbContent'),
+  sbFooter:     () => $('sbFooter'),
+  // Indicators
+  learnIndicator:    () => $('learnIndicator'),
+  learnIndicatorText:() => $('learnIndicatorText'),
+  // History
+  historicoLista:() => $('historicoLista'),
+  historicoBusca:() => $('historicoBusca'),
+  historicoFiltro:() => $('historicoFiltro'),
+};
+
+/* ════════════════════════════════════════════════
+   PROMPTS PADRÃO
+   ════════════════════════════════════════════════ */
+const PROMPTS_DEFAULT = {
+P1: `Formate ficha técnica em blocos temáticos com tópicos. Use só o que foi fornecido.
+
+REGRA SOBRE CAMPOS AUSENTES:
+- Para campos gerais da ficha: omita o campo completamente se não houver dado.
+- EXCEÇÃO — campos prioritários da categoria: se o exemplo de referência listar campos prioritários e algum não estiver nos dados brutos, inclua o campo com o valor "Não informado" (ex: "Corrente nominal: Não informado").
+
+Estrutura obrigatória:
+
+[CÓDIGO(S)]
+[DESCRIÇÃO DO PRODUTO]
+Características Principais:
+Marca: [valor]
+Cor: [valor]
+Modelo: [valor]
+[EAN(s) — um por linha se houver mais de um]
+(inclua apenas os que existirem nos dados brutos — omita completamente os ausentes, NUNCA escreva 'Não informado' para Marca, Modelo ou Cor)
+
+TÍTULO SEO:
+Gere um título otimizado para SEO seguindo exatamente a estrutura: Categoria + Marca + Modelo + Atributos principais.
+Use os atributos mais relevantes e buscados para o tipo de produto (capacidade, voltagem, cor, tecnologia, etc).
+Escreva em linguagem natural, sem separadores como | ou /.
+
+Características Adicionais:
+— Liste cada atributo técnico em linha própria, agrupando em blocos temáticos quando houver informação suficiente.
+— Use o formato: NomeDoBloco: (linha separada com os itens abaixo, um por linha sem símbolos no início)
+— Blocos sugeridos conforme o produto: Capacidade, Freezer, Recursos e Funções, Portas e Compartimentos, Energia, Instalação e Estrutura, Dimensões, Dimensões com Embalagem, Itens inclusos — use apenas os que tiverem dados.
+— Quando houver dados de dimensões com e sem embalagem, separe sempre em dois blocos distintos: "Dimensões:" e "Dimensões com Embalagem:" — nunca misture os dois no mesmo bloco.
+— Atributos isolados que não se encaixam em bloco ficam como linha direta: Atributo: valor
+
+Benefícios:
+— Lista de vantagens de forma atrativa ao consumidor, uma por linha, sem nenhum símbolo no início de cada linha.
+
+Fornecedor: [copie o nome EXATAMENTE como está nos dados brutos, caractere por caractere — incluindo &, %, /, \\, números e qualquer símbolo. NUNCA remova, altere ou normalize nada do nome do fornecedor]`,
+
+P2: `QA de ficha técnica. Compare a FICHA GERADA com os DADOS BRUTOS fornecidos.
+
+REGRAS DE APROVAÇÃO — só reprove se houver erro real:
+- Reprove se um dado que existia nos dados brutos foi omitido ou alterado incorretamente na ficha.
+- Reprove se há inconsistência interna (ex: valor A no título e valor B nas características).
+- Reprove se há campos [NÃO INFORMADO] quando o dado existia nos dados brutos.
+
+REGRAS DE NÃO REPROVAR — nunca reprove por:
+- Blocos temáticos ausentes (Freezer, Portas, Instalação, etc.) — são opcionais e só aparecem se o produto tiver esses dados.
+- Campos omitidos que realmente não se aplicam ao tipo de produto (ex: Cor omitida se não há cor nos brutos).
+- Campos marcados como "Não informado" para itens da lista de campos prioritários — isso é comportamento esperado.
+- Nomes de fornecedores com caracteres especiais (&, &&, %, /, \\, números, siglas) — são nomes próprios válidos. O fornecedor pode aparecer em QUALQUER linha do input, inclusive no final.
+- Repetição entre Características e Benefícios — Benefícios têm propósito comercial.
+- Título SEO diferente da descrição do produto — são campos distintos com propósitos distintos.
+
+ATENÇÃO ESPECIAL — campo Fornecedor:
+O fornecedor pode estar em qualquer posição no input (início, meio ou fim).
+Símbolos como &&, &, MM, LTDA, S.A., / são partes normais de nomes empresariais.
+SÓ reprove o fornecedor se ele foi completamente omitido da ficha ou se o nome foi alterado de forma que não corresponda ao original.
+
+Você receberá os DADOS BRUTOS e a FICHA GERADA para comparação.
+
+Responda apenas:
+STATUS: APROVADO
+ou
+STATUS: REPROVADO
+ERROS:
+- [erro específico citando o dado nos brutos vs o que foi gerado]`,
+
+P3: `Crie conteúdo comercial para e-commerce com base na ficha fornecida. Cada seção deve ser diferente das outras — varie o ângulo, os benefícios destacados e a linguagem. Se houver poucas informações, inverta a ordem dos destaques para não repetir.
+
+REGRAS ABSOLUTAS:
+- Jamais mencione o nome do produto, marca ou modelo em nenhuma das seções.
+- Não use traços (-), bullets (•), hífens ou qualquer símbolo no início das frases. Escreva em texto corrido.
+- Respeite rigorosamente os limites de caracteres de cada seção — não ultrapasse.
+
+DESCRIÇÃO ABREVIADA: (máximo 600 caracteres)
+Texto em terceira pessoa, linguagem de venda. Destaque os principais diferenciais, características e benefícios. Texto corrido, sem listas.
+
+KEYWORD: (máximo 240 caracteres)
+Texto chamativo em terceira pessoa, linguagem persuasiva. Desperte o interesse do consumidor destacando um benefício. Texto corrido.
+
+META DESCRIPTION: (máximo 140 caracteres)
+Texto em terceira pessoa destacando um diferencial. Termine obrigatoriamente com "Confira agora!". Texto corrido.`,
+
+P1B: `Formate ficha técnica bivolt (110V e 220V) em blocos temáticos com tópicos. Use só o que foi fornecido.
+
+REGRA SOBRE CAMPOS AUSENTES:
+- Para campos gerais da ficha: omita o campo completamente se não houver dado.
+- EXCEÇÃO — campos prioritários da categoria: se o exemplo de referência listar campos prioritários e algum não estiver nos dados brutos, inclua o campo com o valor "Não informado".
+
+REGRA PRINCIPAL — compare os dois modelos atributo por atributo:
+- Se o material bruto NÃO especificar diferença entre 110V e 220V para um atributo → liste uma única vez, SEM mencionar voltagem. Não invente diferenciação.
+- Se o material bruto especificar valores DIFERENTES por voltagem → liste separando assim:
+  110V: [valor]
+  220V: [valor]
+- Se o material bruto especificar valores IGUAIS para os dois mas listar separado por voltagem → também é aceito, não é erro.
+
+Estrutura obrigatória:
+
+[CÓDIGO(S)]
+[DESCRIÇÃO DO PRODUTO — sem voltagem no título]
+[EAN(s) — um por linha, identificando a voltagem se houver EANs distintos]
+Marca: [valor] | Modelo: [valor] | Cor: [valor]
+(inclua apenas os que existirem nos dados brutos — omita completamente os ausentes, NUNCA escreva 'Não informado' para Marca, Modelo ou Cor)
+
+TÍTULO SEO:
+Gere um título otimizado para SEO seguindo exatamente a estrutura: Categoria + Marca + Modelo + Atributos principais.
+Use os atributos mais relevantes e buscados para o tipo de produto (capacidade, cor, tecnologia, etc). Não mencione voltagem no título SEO pois este é o produto pai.
+Escreva em linguagem natural, sem separadores como | ou /.
+
+CARACTERÍSTICAS PRINCIPAIS:
+— Liste cada atributo técnico em linha própria, agrupando em blocos temáticos quando houver informação suficiente.
+— Use o formato: NomeDoBloco: (linha separada com os itens abaixo, um por linha sem símbolos no início)
+— Blocos sugeridos conforme o produto: Capacidade, Freezer, Recursos e Funções, Portas e Compartimentos, Energia, Instalação e Estrutura, Dimensões, Dimensões com Embalagem, Itens inclusos — use apenas os que tiverem dados.
+— Quando houver dados de dimensões com e sem embalagem, separe sempre em dois blocos distintos: "Dimensões:" e "Dimensões com Embalagem:" — nunca misture os dois no mesmo bloco.
+— Atributos que diferem por voltagem ficam com 110V: / 220V: dentro do bloco correspondente, sem símbolos antes.
+
+BENEFÍCIOS:
+— Lista de vantagens comuns aos dois modelos de forma atrativa ao consumidor, uma por linha, sem nenhum símbolo no início de cada linha.
+
+Fornecedor: [copie o nome EXATAMENTE como está nos dados brutos, caractere por caractere — incluindo &, %, /, \\, números e qualquer símbolo. NUNCA remova, altere ou normalize nada do nome do fornecedor]`,
+
+P2B: `QA de ficha técnica bivolt (110V e 220V).
+
+REGRA CRÍTICA sobre diferenciação por voltagem:
+- Se o material bruto NÃO especificava diferença para um atributo → APROVAR mesmo que a ficha liste separado por voltagem com valores iguais, ou liste sem diferenciação. Ambos são corretos.
+- Só REPROVAR se o material bruto claramente mostrava valores DISTINTOS por voltagem e a ficha ignorou isso, listando um único valor genérico incorreto.
+
+Demais verificações — só reprove se for erro real:
+- Campos omitidos quando o dado EXISTIA nos dados brutos.
+- Blocos temáticos ausentes NÃO são erro — são opcionais e dependem do tipo de produto.
+- Inconsistências internas entre os dados da ficha.
+- Voltagem aparecendo indevidamente no título/descrição do produto pai.
+- Repetição entre Características e Benefícios — IGNORAR: Benefícios têm propósito comercial.
+- Campos marcados como "Não informado" na lista de prioritários — comportamento esperado.
+- Campos omitidos que não se aplicam ao produto (ex: Cor ausente se não há cor nos brutos).
+- Nomes de fornecedores com caracteres especiais (&, &&, %, /, \\, números, siglas) — são nomes próprios válidos. O fornecedor pode aparecer em qualquer linha do input.
+- Nunca reprove por campos que simplesmente não se aplicam ao produto.
+
+Você receberá os DADOS BRUTOS e a FICHA GERADA para comparação.
+
+Responda apenas:
+STATUS: APROVADO
+ou
+STATUS: REPROVADO
+ERROS:
+- [erro específico, citando o que estava nos dados brutos vs o que foi gerado]`,
+
+P3B: `Crie conteúdo comercial para e-commerce de produto com versões 110V e 220V. Use apenas informações comuns aos dois modelos. Cada seção deve ser diferente das outras — varie o ângulo e a linguagem.
+
+REGRAS ABSOLUTAS:
+- Jamais mencione o nome do produto, marca, modelo ou voltagem em nenhuma das seções.
+- Não use traços (-), bullets (•), hífens ou qualquer símbolo no início das frases. Escreva em texto corrido.
+- Respeite rigorosamente os limites de caracteres de cada seção — não ultrapasse.
+
+TÍTULO PAI: (máximo 150 caracteres)
+Nome comercial completo sem voltagem, destacando as principais características comuns.
+
+DESCRIÇÃO ABREVIADA: (máximo 600 caracteres)
+Texto em terceira pessoa, linguagem de venda. Destaque os principais diferenciais e benefícios comuns. Texto corrido, sem listas.
+
+KEYWORD: (máximo 240 caracteres)
+Texto chamativo em terceira pessoa, linguagem persuasiva. Desperte o interesse destacando um benefício. Texto corrido.
+
+META DESCRIPTION: (máximo 140 caracteres)
+Texto em terceira pessoa destacando um diferencial. Termine obrigatoriamente com "Confira agora!". Texto corrido.`,
+};
+
+const PROMPT_LABELS = {
+  P1: 'A1 — Ficha Padrão', P2: 'A2 — QA Padrão',  P3: 'A3 — Copy Padrão',
+  P1B:'A1 — Ficha Bivolt', P2B:'A2 — QA Bivolt',   P3B:'A3 — Copy Bivolt',
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: PROMPTS
+   ════════════════════════════════════════════════ */
+const LS_PROMPTS = 'fastseo_prompts_custom';
+const Prompts = {
+  get(key) {
+    const custom = Storage.get(LS_PROMPTS, {});
+    return custom[key] || PROMPTS_DEFAULT[key];
+  },
+  save(key, value) {
+    const custom = Storage.get(LS_PROMPTS, {});
+    if (value === PROMPTS_DEFAULT[key]) delete custom[key];
+    else custom[key] = value;
+    Storage.set(LS_PROMPTS, custom);
+  },
+  isCustom(key) {
+    const custom = Storage.get(LS_PROMPTS, {});
+    return key in custom;
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: CATEGORIAS
+   ════════════════════════════════════════════════ */
+const LS_CATS = 'ficha_categorias';
+const Categories = {
+  getAll() {
+    const parsed = Storage.get(LS_CATS, []);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(c => c && typeof c.id === 'string');
+  },
+  saveAll(cats) { Storage.set(LS_CATS, cats); },
+  create() {
+    const cats = this.getAll();
+    const nova = { id: 'cat_' + Date.now(), nome: 'Nova Categoria', campos: '', ficha: '', copy: '' };
+    cats.push(nova);
+    this.saveAll(cats);
+    return nova;
+  },
+  update(id, data) {
+    const cats = this.getAll();
+    const idx = cats.findIndex(c => c.id === id);
+    if (idx === -1) return false;
+    Object.assign(cats[idx], data);
+    this.saveAll(cats);
+    return true;
+  },
+  delete(id) {
+    const cats = this.getAll().filter(c => c.id !== id);
+    this.saveAll(cats);
+  },
+  find(id) { return this.getAll().find(c => c.id === id) || null; },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: COTA / USO
+   ════════════════════════════════════════════════ */
+const LS_USO = 'gemini_uso';
+const Quota = {
+  today() { return new Date().toISOString().slice(0, 10); },
+  getUsage() {
+    const obj = Storage.get(LS_USO, null);
+    if (!obj || typeof obj.count !== 'number' || obj.data !== this.today()) {
+      return { data: this.today(), count: 0 };
+    }
+    return obj;
+  },
+  add(n) {
+    const uso = this.getUsage();
+    uso.count += n;
+    Storage.set(LS_USO, uso);
+    this.updateUI();
+  },
+  reset() { Storage.remove(LS_USO); this.updateUI(); },
+  getLimit() {
+    const m = UI.modelSel()?.value || '';
+    if (m.includes('2.5-pro')) return 100;
+    if (m.includes('flash-lite')) return 1000;
+    return 250;
+  },
+  updateUI() {
+    const uso = this.getUsage(), lim = this.getLimit();
+    const pct = Math.min(100, (uso.count / lim) * 100);
+    UI.quotaLabel().textContent = `${uso.count} / ${lim} hoje`;
+    UI.quotaFill().style.width = pct + '%';
+    UI.quotaFill().style.background = pct > 80 ? 'var(--color-warn)' : 'var(--color-success)';
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: LOGS PERSISTENTES + MÉTRICAS
+   ════════════════════════════════════════════════ */
+const LS_LOGS = 'fastseo_logs';
+const Logs = {
+  save(data) {
+    try {
+      const logs = Storage.get(LS_LOGS, []);
+      logs.unshift({ ts: new Date().toISOString(), ...data });
+      Storage.set(LS_LOGS, logs.slice(0, 300));
+    } catch(e) { console.warn('Erro ao salvar log:', e); }
+  },
+  getAll() { return Storage.get(LS_LOGS, []); },
+  getMetrics() {
+    const logs = this.getAll();
+    if (!logs.length) return null;
+    const aprovados  = logs.filter(l => l.status === 'aprovado').length;
+    const reprovados = logs.filter(l => l.status === 'reprovado').length;
+    const erros      = logs.filter(l => l.status === 'erro').length;
+    const total      = aprovados + reprovados + erros;
+    const duracoes   = logs.filter(l => l.duracao_ms).map(l => l.duracao_ms);
+    const mediaMs    = duracoes.length ? Math.round(duracoes.reduce((a, b) => a + b, 0) / duracoes.length) : 0;
+    const taxaAprv   = total ? Math.round((aprovados / (aprovados + reprovados || 1)) * 100) : 0;
+    return { total, aprovados, reprovados, erros, mediaMs, taxaAprv };
+  },
+  clear() { Storage.remove(LS_LOGS); },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: HISTÓRICO
+   ════════════════════════════════════════════════ */
+const LS_HIST = 'fastseo_historico';
+const History = {
+  getAll() { return Storage.get(LS_HIST, []); },
+  save(ficha, conteudo, bivolt) {
+    const historico = this.getAll();
+    const preview = (UI.inputText()?.value || '').slice(0, 100).trim();
+    historico.unshift({
+      id: Date.now(),
+      data: new Date().toLocaleString('pt-BR'),
+      preview: preview || '(sem preview)',
+      ficha, conteudo: conteudo || '', bivolt: !!bivolt,
+    });
+    Storage.set(LS_HIST, historico.slice(0, 50));
+    HistoryUI.render();
+  },
+  clear() { Storage.remove(LS_HIST); },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: API (Gemini + Mistral)
+   ════════════════════════════════════════════════ */
+const API = {
+  async callGemini(system, userMsg, maxTokens, attempt = 1, signal = null) {
+    const key   = UI.apiKey().value.trim();
+    const model = UI.modelSel().value;
+    const url   = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal,
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: system }] },
+        contents: [{ role: 'user', parts: [{ text: userMsg }] }],
+        generationConfig: { maxOutputTokens: maxTokens, temperature: 0.3 },
+      }),
+    });
+    if (res.status === 429) {
+      const e = await res.json().catch(() => ({}));
+      const msg = e?.error?.message || '';
+      if (/quota|daily|resource_exhausted|exhausted/i.test(msg)) {
+        throw Object.assign(new Error('cota_esgotada'), { cotaEsgotada: true });
+      }
+      if (attempt <= 3) {
+        const wait = attempt * 15;
+        PipelineUI.log(`⏳ Limite por minuto (Gemini). Aguardando ${wait}s...`, 'w');
+        await this._sleep(wait * 1000, signal);
+        return this.callGemini(system, userMsg, maxTokens, attempt + 1, signal);
+      }
+      throw Object.assign(new Error('cota_esgotada'), { cotaEsgotada: true });
+    }
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      if (res.status === 400) throw new Error('API Key do Gemini inválida. Verifique em aistudio.google.com');
+      throw new Error(`Gemini: ${e?.error?.message || 'HTTP ' + res.status}`);
+    }
+    const d = await res.json();
+    const txt = d?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if (!txt) throw new Error('Resposta vazia do Gemini.');
+    return txt;
+  },
+
+  async callMistral(system, userMsg, maxTokens, signal = null, attempt = 0) {
+    const key = UI.mistralKey().value.trim();
+    if (!key) throw new Error('API Key da Mistral não configurada.');
+    const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+      signal,
+      body: JSON.stringify({
+        model: 'mistral-small-latest', max_tokens: maxTokens, temperature: 0.3,
+        messages: [{ role: 'system', content: system }, { role: 'user', content: userMsg }],
+      }),
+    });
+    if (res.status === 429) {
+      if (attempt < 1) {
+        PipelineUI.log('⏳ Limite por minuto (Mistral). Aguardando 15s...', 'w');
+        await this._sleep(15000, signal);
+        return this.callMistral(system, userMsg, maxTokens, signal, attempt + 1);
+      }
+      throw Object.assign(new Error('cota_esgotada'), { cotaEsgotada: true });
+    }
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      if (res.status === 401) throw new Error('API Key da Mistral inválida. Verifique em console.mistral.ai');
+      throw new Error(`Mistral: ${e?.message || 'HTTP ' + res.status}`);
+    }
+    const d = await res.json();
+    const txt = d?.choices?.[0]?.message?.content?.trim();
+    if (!txt) throw new Error('Resposta vazia da Mistral.');
+    return txt;
+  },
+
+
+  // Roteador: agente 1 = Mistral, agentes 2 e 3 = Gemini
+  async call(system, userMsg, maxTokens, signal, agentNum) {
+    const mistralOk = UI.mistralKey().value.trim().length > 20;
+    const geminiOk  = UI.apiKey().value.trim().startsWith('AIza') && UI.apiKey().value.trim().length > 20;
+
+    // Helpers para fallback — tenta Mistral → Gemini (excluindo a primária que já falhou)
+    const tryFallback = async (skipApi, label) => {
+      if (skipApi !== 'mistral' && mistralOk) {
+        PipelineUI.log(`⚠ ${label} — usando Mistral como fallback...`, 'w');
+        try { return await this.callMistral(system, userMsg, maxTokens, signal); }
+        catch (e2) { if (!e2.cotaEsgotada) throw e2; PipelineUI.log('⚠ Mistral também indisponível no fallback.', 'w'); }
+      }
+      if (skipApi !== 'gemini' && geminiOk) {
+        PipelineUI.log(`⚠ ${label} — usando Gemini como fallback...`, 'w');
+        return this.callGemini(system, userMsg, maxTokens, 1, signal);
+      }
+      throw new Error(`Todas as APIs falharam no A${agentNum}. Verifique suas chaves e cotas.`);
+    };
+
+    // ── A1: Mistral (primária) ──
+    if (agentNum === 1) {
+      if (!mistralOk) {
+        PipelineUI.log('⚠ Mistral não configurada no A1 — usando Gemini como fallback...', 'w');
+        return tryFallback('mistral', 'A1 sem Mistral');
+      }
+      try { return await this.callMistral(system, userMsg, maxTokens, signal); }
+      catch (err) {
+        if (err.cotaEsgotada) return tryFallback('mistral', 'Mistral indisponível no A1');
+        throw err;
+      }
+    }
+
+    // ── A2 e A3: Gemini (primária) ──
+    if (!geminiOk) {
+      PipelineUI.log(`⚠ Gemini não configurada no A${agentNum} — usando Mistral como fallback...`, 'w');
+      return tryFallback('gemini', `A${agentNum} sem Gemini`);
+    }
+    try { return await this.callGemini(system, userMsg, maxTokens, 1, signal); }
+    catch (err) {
+      if (err.cotaEsgotada) return tryFallback('gemini', `Gemini indisponível no A${agentNum}`);
+      throw err;
+    }
+  },
+
+  _sleep(ms, signal) {
+    return new Promise((resolve, reject) => {
+      const t = setTimeout(resolve, ms);
+      signal?.addEventListener('abort', () => { clearTimeout(t); reject(new DOMException('Aborted', 'AbortError')); }, { once: true });
+    });
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: UTILITÁRIOS
+   ════════════════════════════════════════════════ */
+const Utils = {
+  escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  },
+  sanitize(t) {
+    t = t.replace(/<[^>]+>/g,'').replace(/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f]/g,'')
+         .replace(/(javascript:|data:|vbscript:)/gi,'').replace(/ {3,}/g,'  ').trim();
+    if (t.length > 12000) { PipelineUI.log('Input truncado para 12.000 caracteres.','w'); t = t.slice(0,12000); }
+    return t;
+  },
+  detectBivolt(text) {
+    return /(?<!\d)(110|127)\s*[vV](?!\d)/.test(text) && /(?<!\d)(220|240)\s*[vV](?!\d)/.test(text);
+  },
+  validateInput(text) {
+    const alerts = [];
+    if (text.length < 80) alerts.push('⚠ Input muito curto — verifique se os dados foram colados corretamente.');
+    if (!/\d/.test(text)) alerts.push('⚠ Nenhum dado numérico encontrado — fichas técnicas geralmente têm códigos ou medidas.');
+    if (text.split('\n').filter(l => l.trim()).length < 3) alerts.push('⚠ Poucas linhas de dados — o conteúdo pode estar incompleto.');
+    return alerts;
+  },
+  buildFewShot(bivolt, cats) {
+    const MAX_CHARS = 6000;
+    const validCats = (cats || Categories.getAll()).filter(c => c.ficha || c.campos || c.copy);
+    if (!validCats.length) return '';
+    const header = '\n\n── EXEMPLOS E PADRÕES DA EMPRESA ──\nUse os exemplos abaixo como referência de formato, campos prioritários e tom. Adapte ao produto atual.\n\n';
+    let bloco = header, len = 0;
+    const limit = MAX_CHARS - header.length;
+    for (const cat of validCats) {
+      let parte = `=== CATEGORIA: ${cat.nome} ===\n`;
+      if (cat.campos) parte += `Campos prioritários:\n${cat.campos}\n\n`;
+      if (cat.ficha)  parte += `Exemplo de ficha ideal:\n${cat.ficha}\n\n`;
+      if (cat.copy && !bivolt) parte += `Exemplo de conteúdo comercial:\n${cat.copy}\n\n`;
+      parte += '---\n';
+      if (len + parte.length > limit) { bloco += '(demais categorias omitidas por limite de tamanho)\n'; break; }
+      bloco += parte; len += parte.length;
+    }
+    return bloco;
+  },
+  matchCategories(input) {
+    const all = Categories.getAll().filter(c => c.ficha || c.campos || c.copy);
+    const inputLower = input.toLowerCase();
+    return all.filter(cat => {
+      const nome = cat.nome.toLowerCase().trim();
+      const nomeSemHifen  = nome.replace(/-/g, ' ');
+      const inputSemHifen = inputLower.replace(/-/g, ' ');
+      const rePhrase = new RegExp('(?<![\\w\\u00C0-\\u024F])' + nomeSemHifen.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\w\\u00C0-\\u024F])');
+      if (rePhrase.test(inputSemHifen)) return true;
+      const unica = !nome.includes(' ') && !nome.includes('-');
+      if (unica && nome.length >= 4) {
+        const reWord = new RegExp('(?<![\\w\\u00C0-\\u024F])' + nome.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\w\\u00C0-\\u024F])');
+        return reWord.test(inputLower);
+      }
+      return false;
+    });
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: PIPELINE UI
+   ════════════════════════════════════════════════ */
+const PipelineUI = {
+  log(msg, type = 'i') {
+    const box = UI.logBox();
+    if (!box) return;
+    box.classList.add('vis');
+    const ts = new Date().toTimeString().slice(0, 8);
+    const el = document.createElement('div');
+    el.className = `log-line log-${type}`;
+    const tsSpan  = document.createElement('span'); tsSpan.className = 'log-ts';  tsSpan.textContent = ts;
+    const msgSpan = document.createElement('span'); msgSpan.className = 'log-msg'; msgSpan.textContent = msg;
+    el.append(tsSpan, msgSpan);
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+  },
+  setStep(n, state) { const el = $(`ps${n}`); if (el) el.className = `step ${state}`; },
+  resetSteps() { [1, 2, 3].forEach(n => this.setStep(n, '')); },
+  setRunning(on) {
+    const btn = UI.runBtn();
+    btn.disabled = on; btn.classList.toggle('loading', on);
+  },
+  showResults(ficha, validacao, conteudo, bivolt, reprovado) {
+    UI.fichaOut().textContent     = ficha;
+    UI.validacaoOut().textContent = validacao;
+    UI.bivoltBadge().style.display = bivolt ? 'inline-flex' : 'none';
+    const badge = UI.statusBadge();
+    badge.textContent = reprovado ? 'REPROVADO' : 'APROVADO';
+    badge.className   = `badge ${reprovado ? 'badge-fail' : 'badge-ok'}`;
+    if (conteudo) {
+      UI.conteudoOut().textContent = conteudo;
+      UI.copyBlock().style.display = 'block';
+    }
+    UI.results().classList.add('vis');
+  },
+  clearResults() {
+    UI.logBox().innerHTML = '';
+    UI.logBox().classList.remove('vis');
+    UI.results().classList.remove('vis');
+    UI.copyBlock().style.display = 'none';
+    UI.bivoltBadge().style.display = 'none';
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: PIPELINE
+   ════════════════════════════════════════════════ */
+const Pipeline = {
+  async run(forced = false) {
+    const inputRaw = UI.inputText().value;
+    if (!forced) {
+      const alerts = Utils.validateInput(inputRaw.trim());
+      if (alerts.length) { this._showInputAlerts(alerts); return; }
+    }
+    $('inputAlertBox')?.remove();
+    await this._execute(inputRaw);
+  },
+
+  async _execute(inputRaw) {
+    const t0  = Date.now();
+    const geminiKey    = UI.apiKey().value.trim();
+    const mistralKey   = UI.mistralKey().value.trim();
+    const anyKeyOk     = (geminiKey.startsWith('AIza') && geminiKey.length > 20)
+                      || mistralKey.length > 20;
+    if (!anyKeyOk)               { alert('Configure pelo menos uma API Key (Gemini ou Mistral) antes de continuar.'); return; }
+    if (!inputRaw.trim())        { alert('Cole os dados do produto antes de processar.'); return; }
+
+    if (AppState.pipeline.abort) AppState.pipeline.abort.abort();
+    AppState.pipeline.abort = new AbortController();
+    const signal = AppState.pipeline.abort.signal;
+
+    const uso = Quota.getUsage(), lim = Quota.getLimit();
+    if (uso.count + 2 > lim) { alert(`Cota diária esgotada (${uso.count}/${lim}). A cota renova à meia-noite.`); return; }
+    if (uso.count + 3 > lim) PipelineUI.log(`⚠ Atenção: cota baixa (${uso.count}/${lim}) — A3 pode não ter cota suficiente.`, 'w');
+
+    PipelineUI.clearResults();
+    AppState.pipeline.result = {};
+    PipelineUI.resetSteps();
+    PipelineUI.setRunning(true);
+
+    try {
+      const input  = Utils.sanitize(inputRaw);
+      if (!input) throw new Error('Input vazio após sanitização.');
+      const bivolt = Utils.detectBivolt(input);
+
+      // Flush de modal aberto
+      this._flushOpenEditor();
+
+      // Matching de categorias
+      const allCats   = Categories.getAll().filter(c => c.ficha || c.campos || c.copy);
+      const matched   = Utils.matchCategories(input);
+      const unmatched = allCats.filter(c => !matched.includes(c));
+
+      const mistralOk    = UI.mistralKey().value.trim().length > 20;
+      PipelineUI.log(`Modelo Gemini: ${UI.modelSel().value}${mistralOk ? ' · Mistral (A1)' : ''}`, 'i');
+      if (mistralOk) PipelineUI.log(`🔀 Modo mesclado: A1=Mistral · A2=Gemini · A3=Gemini`, 'o');
+      if (bivolt)       PipelineUI.log('⚡ Modo bivolt detectado (110V + 220V)', 'o');
+
+      if (allCats.length === 0) {
+        PipelineUI.log('📂 Nenhuma categoria configurada — processando sem exemplos', 'i');
+      } else if (matched.length === 0) {
+        PipelineUI.log(`⚠ Produto sem categoria correspondente — processando sem exemplos`, 'w');
+        this._showCategoryWarning(allCats.map(c => c.nome));
+      } else {
+        PipelineUI.log(`📚 ${matched.length} categoria(s) aplicada(s): ${matched.map(c => c.nome).join(', ')}`, 'o');
+        if (unmatched.length) PipelineUI.log(`↳ Ignoradas: ${unmatched.map(c => c.nome).join(', ')}`, 'i');
+      }
+
+      const fewShot    = Utils.buildFewShot(bivolt, matched);
+      const hasFewShot = fewShot.length > 0;
+      const tok1 = (bivolt ? 1500 : 1200) + (hasFewShot ? 300 : 0);
+
+      const sys1 = Prompts.get(bivolt ? 'P1B' : 'P1') + fewShot;
+      const sys2 = Prompts.get(bivolt ? 'P2B' : 'P2');
+      const sys3 = Prompts.get(bivolt ? 'P3B' : 'P3') + fewShot;
+
+      // ── AGENTE 1 ──
+      PipelineUI.setStep(1, 'active');
+      PipelineUI.log('[A1] Formatando ficha' + (bivolt ? ' bivolt' : '') + '...', 'i');
+      const ficha = await API.call(sys1, `Dados do produto:\n${input}`, tok1, signal, 1);
+      Quota.add(1); PipelineUI.setStep(1, 'done'); PipelineUI.log('[A1] Ficha formatada.', 'o');
+
+      // ── AGENTE 2 ──
+      PipelineUI.setStep(2, 'active');
+      PipelineUI.log('[A2] Conferindo dados...', 'i');
+      const validacao = await API.call(sys2, `DADOS BRUTOS ORIGINAIS:\n${input}\n\n---\nFICHA GERADA:\n${ficha}`, 400, signal, 2);
+      Quota.add(1);
+      const reprovado = validacao.toUpperCase().includes('REPROVADO');
+      PipelineUI.setStep(2, reprovado ? 'error' : 'done');
+      PipelineUI.log(`[A2] ${reprovado ? 'REPROVADO' : 'APROVADO'}`, reprovado ? 'w' : 'o');
+
+      // ── AGENTE 3 ──
+      let conteudo = '';
+      if (!reprovado) {
+        PipelineUI.setStep(3, 'active');
+        PipelineUI.log('[A3] Gerando conteúdo comercial...', 'i');
+        conteudo = await API.call(sys3, ficha, 500, signal, 3);
+        Quota.add(1); PipelineUI.setStep(3, 'done'); PipelineUI.log('[A3] Conteúdo gerado.', 'o');
+      } else {
+        PipelineUI.setStep(3, 'skip'); PipelineUI.log('[A3] Pulado.', 'w');
+      }
+
+      // Salvar estado
+      AppState.pipeline.result = { ficha, validacao, conteudo, bivolt, reprovado };
+      PipelineUI.showResults(ficha, validacao, conteudo, bivolt, reprovado);
+      PipelineUI.log('Pipeline concluído.', 'o');
+
+      History.save(ficha, conteudo, bivolt);
+      Logs.save({ status: reprovado ? 'reprovado' : 'aprovado', duracao_ms: Date.now() - t0, modelo: UI.modelSel().value, bivolt: !!bivolt, usou_mistral: mistralOk });
+      Quota.updateUI();
+
+    } catch(err) {
+      if (err.name === 'AbortError') {
+        [1, 2, 3].forEach(n => { if ($(`ps${n}`)?.classList.contains('active')) PipelineUI.setStep(n, ''); });
+        return;
+      }
+      PipelineUI.log(`ERRO: ${err.message}`, 'e');
+      Logs.save({ status: 'erro', duracao_ms: Date.now() - t0, erro: err.message });
+      [1, 2, 3].forEach(n => { if ($(`ps${n}`)?.classList.contains('active')) PipelineUI.setStep(n, 'error'); });
+      alert(`Erro:\n${err.message}`);
+    } finally {
+      PipelineUI.setRunning(false);
+    }
+  },
+
+  _flushOpenEditor() {
+    const { active, editorOpen, saveTimer } = AppState.categories;
+    if (saveTimer) { clearTimeout(saveTimer); AppState.categories.saveTimer = null; }
+    if (!editorOpen || !active) return;
+    const fields = { nome: $('catNome'), campos: $('catCampos'), ficha: $('catFicha'), copy: $('catCopy') };
+    if (Object.values(fields).every(Boolean)) {
+      Categories.update(active, {
+        nome:   fields.nome.value   || undefined,
+        campos: fields.campos.value,
+        ficha:  fields.ficha.value,
+        copy:   fields.copy.value,
+      });
+    }
+  },
+
+  _showInputAlerts(alerts) {
+    $('inputAlertBox')?.remove();
+    const box = document.createElement('div');
+    box.id = 'inputAlertBox';
+    box.style.cssText = 'background:var(--color-bg-subtle);border:1px solid var(--color-warn);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--color-text-secondary);line-height:1.8;display:flex;flex-direction:column;gap:4px;';
+    box.innerHTML = alerts.map(a => `<span>${a}</span>`).join('') +
+      `<div style="margin-top:6px;display:flex;gap:10px">
+         <button id="forceRunBtn" style="font-size:11px;padding:4px 12px;border-radius:6px;border:1px solid var(--color-warn);background:none;color:var(--color-warn);cursor:pointer;font-weight:600">Processar mesmo assim</button>
+         <button id="cancelAlertBtn" style="font-size:11px;padding:4px 12px;border-radius:6px;border:1px solid var(--color-border);background:none;color:var(--color-text-muted);cursor:pointer">Corrigir input</button>
+       </div>`;
+    const runBtn = UI.runBtn();
+    runBtn.parentNode.insertBefore(box, runBtn.nextSibling);
+    box.querySelector('#forceRunBtn').addEventListener('click', () => { box.remove(); Pipeline.run(true); });
+    box.querySelector('#cancelAlertBtn').addEventListener('click', () => box.remove());
+  },
+
+  _showCategoryWarning(names) {
+    $('catToast')?.remove();
+    if (!$('toastStyle')) {
+      const s = document.createElement('style');
+      s.id = 'toastStyle';
+      s.textContent = '@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
+      document.head.appendChild(s);
+    }
+    const toast = document.createElement('div');
+    toast.id = 'catToast';
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--color-surface);border:1px solid var(--color-warn);border-radius:10px;padding:14px 18px;max-width:320px;box-shadow:0 4px 20px rgba(0,0,0,.15);font-size:13px;color:var(--color-text-secondary);line-height:1.6;animation:slideIn .25s ease;';
+    toast.innerHTML = `<div style="display:flex;align-items:flex-start;gap:10px"><span style="font-size:18px;flex-shrink:0">⚠️</span><div><strong style="color:var(--color-warn);display:block;margin-bottom:4px">Produto sem categoria correspondente</strong>Nenhuma categoria (${names.map(n => `<em>${Utils.escHtml(n)}</em>`).join(', ')}) foi identificada. O pipeline continua <strong>sem exemplos de referência</strong>.</div><button id="catToastClose" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;font-size:16px;flex-shrink:0;padding:0 0 0 6px">✕</button></div>`;
+    document.body.appendChild(toast);
+    $('catToastClose')?.addEventListener('click', () => toast.remove());
+    setTimeout(() => { if (toast.parentNode) toast.remove(); }, 7000);
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: SIDEBAR / CATEGORIAS UI
+   ════════════════════════════════════════════════ */
+const SidebarUI = {
+  render() {
+    const cats = Categories.getAll();
+    const { active } = AppState.categories;
+    if (active && !cats.find(c => c.id === active)) {
+      AppState.categories.active = cats.length ? cats[0].id : null;
+    }
+    if (cats.length === 0) {
+      UI.sbContent().innerHTML = `<div class="sb-empty"><strong>📂</strong>Nenhuma categoria ainda.<br>Clique em <strong>＋ Nova Categoria</strong> para começar.</div>`;
+      UI.sbFooter().textContent = '';
+    } else {
+      const items = cats.map(cat => {
+        const isActive = cat.id === AppState.categories.active ? ' active' : '';
+        const check    = (cat.ficha || cat.campos || cat.copy) ? '<span class="sb-cat-check">✓</span>' : '';
+        return `<button class="sb-cat-item${isActive}" data-catid="${Utils.escHtml(cat.id)}">
+          <span class="sb-cat-dot"></span>
+          <span class="sb-cat-name">${Utils.escHtml(cat.nome || 'Sem nome')}</span>
+          ${check}
+        </button>`;
+      }).join('');
+      UI.sbContent().innerHTML = `<div class="sb-section-label">Categorias</div><div class="sb-cat-list">${items}</div>`;
+      const total = cats.length, withEx = cats.filter(c => c.ficha || c.campos).length;
+      UI.sbFooter().textContent = `${total} categoria${total > 1 ? 's' : ''} · ${withEx} com exemplos`;
+    }
+    this.updateIndicator();
+  },
+
+  updateIndicator() {
+    const cats = Categories.getAll().filter(c => c.ficha || c.campos || c.copy);
+    const el = UI.learnIndicator(), txt = UI.learnIndicatorText();
+    if (!el || !txt) return;
+    if (cats.length === 0) {
+      el.className = 'learn-indicator empty';
+      txt.textContent = 'Nenhum exemplo configurado — abra o painel lateral para adicionar referências';
+    } else {
+      el.className = 'learn-indicator';
+      txt.textContent = `📚 ${cats.length} categoria${cats.length > 1 ? 's' : ''} de referência ativa${cats.length > 1 ? 's' : ''} — o Gemini usará seus exemplos como guia`;
+    }
+  },
+
+  select(id) {
+    AppState.categories.active = id;
+    AppState.categories.editorOpen = true;
+    this.render();
+    CategoryModal.open(id);
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: MODAL DE CATEGORIA
+   ════════════════════════════════════════════════ */
+const CategoryModal = {
+  open(id) {
+    this.close(true);
+    const cat = Categories.find(id);
+    if (!cat) return;
+    AppState.categories.active = id;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.id = 'catModalOverlay';
+    overlay.innerHTML = `
+      <div class="modal" id="catModal">
+        <div class="modal-hdr">
+          <span class="modal-title">✏️ Editar Categoria</span>
+          <button class="modal-close" id="catModalCloseBtn">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="m-field"><label>Nome</label><input type="text" id="catNome" value="${Utils.escHtml(cat.nome || '')}" placeholder="Ex: Disjuntor, Ar-Condicionado..."/></div>
+          <div class="m-field"><label>Campos prioritários</label><textarea id="catCampos" placeholder="Ex: Corrente nominal, Grau IP...">${Utils.escHtml(cat.campos || '')}</textarea></div>
+          <div class="m-field"><label>Exemplo de ficha ideal</label><textarea id="catFicha" class="tall" placeholder="Cole uma ficha formatada como referência...">${Utils.escHtml(cat.ficha || '')}</textarea></div>
+          <div class="m-field"><label>Exemplo de conteúdo comercial</label><textarea id="catCopy" placeholder="Cole um exemplo de descrição + keyword + meta...">${Utils.escHtml(cat.copy || '')}</textarea></div>
+        </div>
+        <div class="modal-ftr">
+          <button class="btn btn-danger" id="catModalDelBtn">🗑 Excluir</button>
+          <span class="modal-saved" id="catSavedMsg">✓ salvo</span>
+          <button class="btn btn-primary" id="catModalSaveBtn">✓ Concluir e Salvar</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) this.close(); });
+    $('catModalCloseBtn').addEventListener('click', () => this.close());
+    $('catModalSaveBtn').addEventListener('click', () => this._finish());
+    $('catModalDelBtn').addEventListener('click',  () => this._delete(id));
+
+    ['catNome', 'catCampos', 'catFicha', 'catCopy'].forEach(fieldId => {
+      $(fieldId)?.addEventListener('input', () => this._autoSave());
+    });
+
+    document.addEventListener('keydown', this._escHandler);
+    setTimeout(() => { const el = $('catNome'); if (el) { el.focus(); el.select(); } }, 50);
+  },
+
+  close(skipRender = false) {
+    $('catModalOverlay')?.remove();
+    document.removeEventListener('keydown', this._escHandler);
+    AppState.categories.editorOpen = false;
+    if (!skipRender) SidebarUI.render();
+  },
+
+  _escHandler(e) { if (e.key === 'Escape') CategoryModal.close(); },
+
+  _autoSave() {
+    clearTimeout(AppState.categories.saveTimer);
+    AppState.categories.saveTimer = setTimeout(() => {
+      const id = AppState.categories.active;
+      const fields = { nome: $('catNome')?.value, campos: $('catCampos')?.value, ficha: $('catFicha')?.value, copy: $('catCopy')?.value };
+      if (fields.nome === undefined) return;
+      Categories.update(id, { nome: fields.nome || 'Sem nome', campos: fields.campos || '', ficha: fields.ficha || '', copy: fields.copy || '' });
+      // Atualiza nome na sidebar sem re-render completo
+      const btn = document.querySelector(`.sb-cat-item[data-catid="${CSS.escape(id)}"] .sb-cat-name`);
+      if (btn) btn.textContent = fields.nome || 'Sem nome';
+      const sv = $('catSavedMsg');
+      if (sv) { sv.classList.add('show'); setTimeout(() => sv.classList.remove('show'), 1800); }
+      SidebarUI.updateIndicator();
+    }, 700);
+  },
+
+  _finish() {
+    const id = AppState.categories.active;
+    const nome = $('catNome')?.value.trim() || 'Sem nome';
+    Categories.update(id, { nome, campos: $('catCampos')?.value || '', ficha: $('catFicha')?.value || '', copy: $('catCopy')?.value || '' });
+    AppState.categories.editorOpen = false;
+    AppState.categories.active = null;
+    this.close(true);
+    SidebarUI.render();
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:600;background:#059669;color:#fff;padding:10px 22px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(5,150,105,.3);animation:fadeIn .2s ease;font-family:var(--font-body);';
+    toast.textContent = `✓ "${nome}" salvo com sucesso`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+  },
+
+  _delete(id) {
+    if (!confirm('Excluir esta categoria?')) return;
+    this.close(true);
+    Categories.delete(id);
+    AppState.categories.active = null;
+    AppState.categories.editorOpen = false;
+    SidebarUI.render();
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: HISTÓRICO UI
+   ════════════════════════════════════════════════ */
+const HistoryUI = {
+  render() {
+    const container = UI.historicoLista();
+    if (!container) return;
+    const busca  = (UI.historicoBusca()?.value || '').toLowerCase().trim();
+    const filtro = UI.historicoFiltro()?.value || 'todos';
+    const todos  = History.getAll();
+    let items    = [...todos];
+    if (filtro === 'bivolt') items = items.filter(i => i.bivolt);
+    if (filtro === 'padrao') items = items.filter(i => !i.bivolt);
+    if (busca) items = items.filter(i => i.preview.toLowerCase().includes(busca) || i.data.toLowerCase().includes(busca));
+
+    if (!items.length) {
+      container.innerHTML = `<p style="color:var(--color-text-muted);font-size:12px;text-align:center;padding:16px 0">${busca || filtro !== 'todos' ? 'Nenhum resultado encontrado para o filtro aplicado.' : 'Nenhum resultado salvo ainda.'}</p>`;
+      return;
+    }
+    container.innerHTML = items.map(item => {
+      const idxOriginal = todos.findIndex(t => t.id === item.id);
+      return `<div class="hist-item" data-idx="${idxOriginal}">
+        <div class="hist-meta">
+          <span class="hist-date">${item.data}</span>
+          ${item.bivolt ? '<span class="hist-bivolt-tag">BIVOLT</span>' : ''}
+        </div>
+        <div class="hist-preview">${Utils.escHtml(item.preview)}</div>
+      </div>`;
+    }).join('');
+    container.querySelectorAll('.hist-item').forEach(el => {
+      el.addEventListener('click', () => this._restore(+el.dataset.idx));
+    });
+  },
+
+  _restore(idx) {
+    const item = History.getAll()[idx];
+    if (!item) return;
+    AppState.pipeline.result = { ficha: item.ficha, conteudo: item.conteudo, bivolt: item.bivolt };
+    PipelineUI.showResults(item.ficha, '', item.conteudo, item.bivolt, false);
+    $('validacaoOut').textContent = '';
+    $('historicoPanel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    PipelineUI.log(`📂 Resultado de ${item.data} restaurado.`, 'o');
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: PROMPT MODAL
+   ════════════════════════════════════════════════ */
+const PromptModal = {
+  open() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay modal-overlay--prompt';
+    overlay.id = 'promptModalOverlay';
+    overlay.innerHTML = `
+      <div class="modal modal--lg">
+        <div class="modal-hdr">
+          <span class="modal-title">✏️ Editar Prompts dos Agentes</span>
+          <button class="modal-close" id="promptModalCloseBtn">✕</button>
+        </div>
+        <div class="modal-body" style="gap:14px">
+          <div class="prompt-tab-row" id="promptTabs"></div>
+          <div style="font-size:11px;color:var(--color-text-muted)">Edite o prompt do agente selecionado. Alterações são salvas automaticamente. <span style="color:var(--color-warn)">Prompts modificados aparecem com ●</span></div>
+          <textarea class="prompt-textarea" id="promptTextarea"></textarea>
+        </div>
+        <div class="modal-ftr">
+          <button class="btn btn-secondary" id="promptRestoreBtn">Restaurar padrão</button>
+          <span class="modal-saved" id="promptSavedMsg">✓ Salvo</span>
+          <button class="btn btn-primary" id="promptCloseBtn">Fechar</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) this.close(); });
+    $('promptModalCloseBtn').addEventListener('click', () => this.close());
+    $('promptCloseBtn').addEventListener('click',      () => this.close());
+    $('promptRestoreBtn').addEventListener('click',    () => this._restore());
+    $('promptTextarea').addEventListener('input',      () => this._onInput());
+    document.addEventListener('keydown', this._escHandler);
+    this._renderTabs();
+    this._selectTab(AppState.prompts.activeTab);
+  },
+  close() {
+    $('promptModalOverlay')?.remove();
+    document.removeEventListener('keydown', this._escHandler);
+  },
+  _escHandler(e) { if (e.key === 'Escape') PromptModal.close(); },
+  _renderTabs() {
+    const row = $('promptTabs');
+    if (!row) return;
+    row.innerHTML = Object.entries(PROMPT_LABELS).map(([k, lbl]) => {
+      const dot = Prompts.isCustom(k) ? ' ●' : '';
+      return `<button class="prompt-tab${k === AppState.prompts.activeTab ? ' active' : ''}" data-key="${k}">${lbl}${dot}</button>`;
+    }).join('');
+    row.querySelectorAll('.prompt-tab').forEach(btn => {
+      btn.addEventListener('click', () => this._selectTab(btn.dataset.key));
+    });
+  },
+  _selectTab(key) {
+    AppState.prompts.activeTab = key;
+    const ta = $('promptTextarea');
+    if (ta) ta.value = Prompts.get(key);
+    this._renderTabs();
+  },
+  _onInput() {
+    clearTimeout(AppState.prompts.saveTimer);
+    AppState.prompts.saveTimer = setTimeout(() => {
+      const ta = $('promptTextarea');
+      if (!ta) return;
+      Prompts.save(AppState.prompts.activeTab, ta.value.trim());
+      this._renderTabs();
+      const msg = $('promptSavedMsg');
+      if (msg) { msg.classList.add('show'); setTimeout(() => msg.classList.remove('show'), 1800); }
+    }, 700);
+  },
+  _restore() {
+    if (!confirm('Restaurar o prompt padrão para este agente? Sua edição será perdida.')) return;
+    Prompts.save(AppState.prompts.activeTab, PROMPTS_DEFAULT[AppState.prompts.activeTab]);
+    const ta = $('promptTextarea');
+    if (ta) ta.value = PROMPTS_DEFAULT[AppState.prompts.activeTab];
+    this._renderTabs();
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: ANALYTICS MODAL
+   ════════════════════════════════════════════════ */
+const AnalyticsModal = {
+  open() {
+    const m = Logs.getMetrics();
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay modal-overlay--prompt';
+    overlay.id = 'analyticsOverlay';
+    const body = m ? `
+      <div class="analytics-grid">
+        <div class="analytics-card"><div class="analytics-val">${m.total}</div><div class="analytics-lbl">Total processado</div></div>
+        <div class="analytics-card"><div class="analytics-val" style="color:var(--color-success)">${m.aprovados}</div><div class="analytics-lbl">Aprovados A2</div></div>
+        <div class="analytics-card"><div class="analytics-val" style="color:var(--color-warn)">${m.reprovados}</div><div class="analytics-lbl">Reprovados A2</div></div>
+        <div class="analytics-card"><div class="analytics-val" style="color:var(--color-danger)">${m.erros}</div><div class="analytics-lbl">Erros</div></div>
+        <div class="analytics-card"><div class="analytics-val" style="color:var(--color-accent)">${m.taxaAprv}%</div><div class="analytics-lbl">Taxa aprovação</div></div>
+        <div class="analytics-card"><div class="analytics-val">${m.mediaMs > 0 ? (m.mediaMs/1000).toFixed(1)+'s' : '—'}</div><div class="analytics-lbl">Tempo médio</div></div>
+      </div>
+      <div style="margin-top:12px;text-align:right">
+        <button id="clearLogsBtn" style="font-size:11px;color:var(--color-text-muted);background:none;border:none;cursor:pointer;padding:4px 8px;transition:color .15s">Limpar logs</button>
+      </div>` : `<p style="text-align:center;color:var(--color-text-muted);font-size:13px;padding:20px 0">Nenhum processamento registrado ainda.<br>Execute o pipeline para ver as métricas.</p>`;
+
+    overlay.innerHTML = `
+      <div class="modal" style="max-width:480px">
+        <div class="modal-hdr"><span class="modal-title">📊 Analytics de uso</span><button class="modal-close" id="analyticsCloseBtn">✕</button></div>
+        <div class="modal-body">${body}</div>
+        <div class="modal-ftr" style="justify-content:flex-end"><button class="btn btn-primary" id="analyticsCloseBtnFtr">Fechar</button></div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) this.close(); });
+    $('analyticsCloseBtn').addEventListener('click',    () => this.close());
+    $('analyticsCloseBtnFtr').addEventListener('click', () => this.close());
+    $('clearLogsBtn')?.addEventListener('click', () => {
+      if (confirm('Apagar todos os logs?')) { Logs.clear(); this.close(); }
+    });
+    $('clearLogsBtn')?.addEventListener('mouseover', e => e.target.style.color = 'var(--color-danger)');
+    $('clearLogsBtn')?.addEventListener('mouseout',  e => e.target.style.color = 'var(--color-text-muted)');
+  },
+  close() { $('analyticsOverlay')?.remove(); },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: EXPORTAÇÃO
+   ════════════════════════════════════════════════ */
+const Export = {
+  txt() {
+    const { ficha, conteudo, bivolt } = AppState.pipeline.result;
+    if (!ficha) return;
+    const agora = new Date().toLocaleString('pt-BR');
+    const linhas = [
+      '═══════════════════════════════════════',
+      '  FAST SEO — Resultado do Pipeline',
+      `  Gerado em: ${agora}`,
+      `  Modo: ${bivolt ? 'Bivolt (110V + 220V)' : 'Padrão'}`,
+      '═══════════════════════════════════════',
+      '', '━━━ FICHA TÉCNICA FORMATADA ━━━', '', ficha,
+    ];
+    if (conteudo) linhas.push('', '━━━ CONTEÚDO COMERCIAL ━━━', '', conteudo);
+    const blob = new Blob([linhas.join('\n')], { type: 'text/plain;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = `fastseo_${Date.now()}.txt`; a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  async copy(field) {
+    const txt = field === 'ficha' ? AppState.pipeline.result.ficha : AppState.pipeline.result.conteudo;
+    if (!txt) return;
+    const btnId = field === 'ficha' ? 'copyFichaBtn' : 'copyConteudoBtn';
+    const btn   = $(btnId);
+    const reset = () => { if (btn) { btn.textContent = 'Copiar'; } };
+    const ok    = () => { if (btn) { btn.textContent = 'Copiado!'; setTimeout(reset, 1500); } };
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(txt).then(ok).catch(() => this._copyFallback(txt, ok));
+    } else {
+      this._copyFallback(txt, ok);
+    }
+  },
+
+  _copyFallback(txt, cb) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = txt; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;pointer-events:none';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (ok) cb(); else throw new Error();
+    } catch { alert('Não foi possível copiar automaticamente. Use Ctrl+C / Cmd+C.'); }
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: CONFIG UI (keys, model, quota)
+   ════════════════════════════════════════════════ */
+const ConfigUI = {
+  validateGeminiKey() {
+    const v = UI.apiKey().value.trim();
+    const el = UI.apiKey(), st = UI.keyStatus();
+    if (!v) { el.className = ''; st.textContent = ''; Storage.remove('gemini_key'); return; }
+    if (v.startsWith('AIza') && v.length > 20) { el.className = 'valid'; st.textContent = '✓'; Storage.set('gemini_key', v); }
+    else { el.className = 'invalid'; st.textContent = '✗'; }
+  },
+  validateMistralKey() {
+    const v = UI.mistralKey().value.trim();
+    const el = UI.mistralKey(), st = UI.mistralStatus();
+    if (!v) { el.className = ''; st.textContent = ''; Storage.remove('mistral_key'); return; }
+    if (v.length > 20) { el.className = 'valid'; st.textContent = '✓'; Storage.set('mistral_key', v); }
+    else { el.className = 'invalid'; st.textContent = '✗'; }
+  },
+  updateQuotaInfo() {
+    const hints = {
+      'gemini-2.5-flash-lite': '✓ recomendado — maior cota diária gratuita',
+      'gemini-2.5-flash':      '✓ boa qualidade, cota intermediária',
+      'gemini-2.5-pro':        '⚠ apenas 100 req/dia — use para tarefas que exigem mais raciocínio',
+    };
+    UI.modelHint().textContent = hints[UI.modelSel().value] || '✓ modelo gratuito';
+    Quota.updateUI();
+  },
+  updateCharCount() {
+    const v = UI.inputText().value;
+    const el = UI.charCount();
+    el.textContent = `${v.length.toLocaleString()} caracteres`;
+    el.className = `char-count${v.length > 10000 ? ' warn' : ''}`;
+  },
+};
+
+/* ════════════════════════════════════════════════
+   MÓDULO: TEMA / SIDEBAR TOGGLE
+   ════════════════════════════════════════════════ */
+const ThemeUI = {
+  toggle() {
+    const html = document.documentElement;
+    const dark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', dark ? 'light' : 'dark');
+    UI.themeBtn().textContent = dark ? '🌙' : '☀️';
+    Storage.set('tema', dark ? 'light' : 'dark');
+  },
+};
+
+const SidebarToggle = {
+  toggle() {
+    const open = AppState.sidebar.open = !AppState.sidebar.open;
+    UI.appLayout().classList.toggle('sidebar-collapsed', !open);
+    UI.appHeader().classList.toggle('sidebar-collapsed', !open);
+    const btn = UI.sidebarToggle();
+    btn.textContent = open ? '◀' : '🧠';
+    btn.title = open ? 'Fechar painel de categorias' : 'Abrir painel de categorias';
+    Storage.set('sb_open', open ? '1' : '0');
+  },
+};
+
+/* ════════════════════════════════════════════════
+   INIT — event listeners sem inline handlers
+   ════════════════════════════════════════════════ */
+// Sidebar delegation (categoria click)
+UI.sbContent().addEventListener('click', e => {
+  const btn = e.target.closest('[data-catid]');
+  if (btn) SidebarUI.select(btn.dataset.catid);
+});
+
+// History inputs
+UI.historicoBusca().addEventListener('input', () => HistoryUI.render());
+UI.historicoFiltro().addEventListener('change', () => HistoryUI.render());
+$('clearHistoricoBtn').addEventListener('click', () => {
+  History.clear(); HistoryUI.render();
+});
+$('clearHistoricoBtn').addEventListener('mouseover', e => e.target.style.color = 'var(--color-danger)');
+$('clearHistoricoBtn').addEventListener('mouseout',  e => e.target.style.color = 'var(--color-text-muted)');
+
+// History search input focus styles
+UI.historicoBusca().addEventListener('focus', e => { e.target.style.borderColor = 'var(--color-accent)'; e.target.style.boxShadow = '0 0 0 3px var(--color-accent-glow)'; });
+UI.historicoBusca().addEventListener('blur',  e => { e.target.style.borderColor = 'var(--color-border)'; e.target.style.boxShadow = 'none'; });
+
+// Header buttons
+UI.sidebarToggle().addEventListener('click', () => SidebarToggle.toggle());
+UI.themeBtn().addEventListener('click', () => ThemeUI.toggle());
+$('openPromptsBtn').addEventListener('click', () => PromptModal.open());
+$('openAnalyticsBtn').addEventListener('click', () => AnalyticsModal.open());
+$('resetCotaBtn').addEventListener('click', () => { Quota.reset(); PipelineUI.log('Contador local zerado.', 'o'); });
+$('addCatBtn').addEventListener('click', () => {
+  const nova = Categories.create();
+  AppState.categories.active = nova.id;
+  AppState.categories.editorOpen = true;
+  if (!AppState.sidebar.open) SidebarToggle.toggle();
+  SidebarUI.render();
+  CategoryModal.open(nova.id);
+});
+
+// Config inputs
+UI.apiKey().addEventListener('input', () => ConfigUI.validateGeminiKey());
+UI.mistralKey().addEventListener('input', () => ConfigUI.validateMistralKey());
+UI.modelSel().addEventListener('change', () => ConfigUI.updateQuotaInfo());
+UI.inputText().addEventListener('input', () => ConfigUI.updateCharCount());
+
+// Pipeline
+UI.runBtn().addEventListener('click', () => Pipeline.run());
+$('copyFichaBtn').addEventListener('click', () => Export.copy('ficha'));
+$('copyConteudoBtn').addEventListener('click', () => Export.copy('conteudo'));
+$('exportTxtBtn').addEventListener('click', () => Export.txt());
+
+/* ════════════════════════════════════════════════
+   BOOTSTRAP — restaura estado salvo
+   ════════════════════════════════════════════════ */
+(function init() {
+  // Tema
+  const tema = Storage.get('tema');
+  if (tema) {
+    document.documentElement.setAttribute('data-theme', tema);
+    UI.themeBtn().textContent = tema === 'dark' ? '☀️' : '🌙';
+  }
+
+  // Sidebar
+  const sbOpen = Storage.get('sb_open');
+  if (sbOpen !== '1') {
+    AppState.sidebar.open = true;
+    SidebarToggle.toggle();
+  } else {
+    UI.appLayout().classList.remove('sidebar-collapsed');
+    UI.appHeader().classList.remove('sidebar-collapsed');
+    UI.sidebarToggle().textContent = '◀';
+    UI.sidebarToggle().title = 'Fechar painel de categorias';
+  }
+
+  // API keys salvas
+  const savedKey = Storage.get('gemini_key');
+  if (savedKey) { UI.apiKey().value = savedKey; ConfigUI.validateGeminiKey(); }
+  const savedMistral = Storage.get('mistral_key');
+  if (savedMistral) { UI.mistralKey().value = savedMistral; ConfigUI.validateMistralKey(); }
+
+  // Inicializa UI
+  ConfigUI.updateQuotaInfo();
+  Quota.updateUI();
+  SidebarUI.render();
+  HistoryUI.render();
+})();
+</script>
+</body>
+</html>
